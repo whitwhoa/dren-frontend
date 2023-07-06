@@ -1,0 +1,19 @@
+{
+  "name": "drencrom-frontend",
+  "version": "1.0.0",
+  "description": "Various frontend components that can be used in any web application",
+  "main": "index.js",
+  "scripts": {
+    "build-web": "browserify ./includes.js -o /var/www/drencrom-test/public/js/drencrom-frontend.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whitwhoa/drencrom-frontend.git"
+  },
+  "author": "whitwhoa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/whitwhoa/drencrom-frontend/issues"
+  },
+  "homepage": "https://github.com/whitwhoa/drencrom-frontend"
+}
