@@ -1,4 +1,5 @@
 module.exports = {
+    mode: 'development',
     entry: './includes.js',
     output: {
         filename: 'drencrom-frontend.js',

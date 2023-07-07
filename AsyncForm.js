@@ -60,7 +60,19 @@ class AsyncForm
             else
                 this.loadingOverlay.show(this.options.processingMessage);
 
-            this.sendFormData(new FormData(this.form));
+            let fd = new FormData(this.form);
+            let fdp = new FormData();
+
+            for (let fde of fd.entries())
+            {
+                let el = this.form.elements[fde[0]];
+                if(el.inputmask && el.getAttribute('data-clearmaskonsubmit') === 'true')
+                    fdp.append(fde[0], el.inputmask.unmaskedvalue());
+                else
+                    fdp.append(fde[0], fde[1]);
+            }
+
+            this.sendFormData(fdp);
 
         });
     }
@@ -94,6 +106,9 @@ class AsyncForm
     async sendFormData(formData) {
         try
         {
+            for (let pair of formData.entries())
+                console.log(pair);
+
             // Set request data
             let fetchOptions = {
                 method: this.form.method,
