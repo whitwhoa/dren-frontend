@@ -186,4 +186,4 @@ class AlertMessage extends HTMLElement {
     }
 }
 
-module.exports = AlertMessage;
+export default AlertMessage;

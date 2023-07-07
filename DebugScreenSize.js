@@ -43,4 +43,4 @@ class DebugScreenSize extends HTMLElement {
     }
 }
 
-module.exports = DebugScreenSize;
+export default DebugScreenSize;

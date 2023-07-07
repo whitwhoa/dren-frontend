@@ -64,4 +64,4 @@ class LoadingOverlay extends HTMLElement {
     }
 }
 
-module.exports = LoadingOverlay;
+export default LoadingOverlay;

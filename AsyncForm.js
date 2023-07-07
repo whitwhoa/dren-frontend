@@ -1,11 +1,17 @@
+import Inputmask from 'inputmask';
+import AlertMessage from './AlertMessage.js';
+import LoadingOverlay from './LoadingOverlay.js';
+
 class AsyncForm
 {
     constructor(formId, options = {}) // happens once
     {
         this.processingTransaction = false;
-        this.loadingOverlay = document.querySelector('loading-overlay');
-        this.alertMessage = document.querySelector('alert-message');
+        this.loadingOverlay = document.querySelector('loading-overlay'); // LoadingOverlay
+        this.alertMessage = document.querySelector('alert-message'); // AlertMessage
         this.form = document.querySelector('#' + formId);
+
+        Inputmask().mask(this.form.querySelectorAll("input"));
 
         this.options = {
             csrfToken:null,
@@ -258,4 +264,4 @@ class AsyncForm
 
 }
 
-module.exports = AsyncForm;
+export default AsyncForm;

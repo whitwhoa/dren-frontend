@@ -1,7 +1,7 @@
-const DebugScreenSize = require('./DebugScreenSize.js');
-const AlertMessage = require('./AlertMessage.js');
-const LoadingOverlay = require('./LoadingOverlay.js');
-const AsyncForm = require('./AsyncForm');
+import DebugScreenSize from './DebugScreenSize.js';
+import AlertMessage from './AlertMessage.js';
+import LoadingOverlay from './LoadingOverlay.js';
+import AsyncForm from './AsyncForm';
 
 
 window.customElements.define('debug-screen-size', DebugScreenSize);
