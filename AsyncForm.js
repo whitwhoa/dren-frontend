@@ -106,9 +106,6 @@ class AsyncForm
     async sendFormData(formData) {
         try
         {
-            for (let pair of formData.entries())
-                console.log(pair);
-
             // Set request data
             let fetchOptions = {
                 method: this.form.method,
