@@ -1,5 +1,5 @@
 {
-  "name": "drencrom-frontend",
+  "name": "dren-frontend",
   "version": "1.0.0",
   "description": "Various frontend components that can be used in any web application",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whitwhoa/drencrom-frontend.git"
+    "url": "git+https://github.com/whitwhoa/dren-frontend.git"
   },
   "author": "whitwhoa",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/whitwhoa/drencrom-frontend/issues"
+    "url": "https://github.com/whitwhoa/dren-frontend/issues"
   },
-  "homepage": "https://github.com/whitwhoa/drencrom-frontend",
+  "homepage": "https://github.com/whitwhoa/dren-frontend",
   "dependencies": {
     "inputmask": "^5.0.8"
   },
