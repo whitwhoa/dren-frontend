@@ -1,11 +1,11 @@
-module.exports = {
-    mode: 'development',
-    entry: './includes.js',
-    output: {
-        filename: 'drencrom-frontend.js',
-        path: '/var/www/drencrom-test/public/js'
-    },
-    module: {
+const path = require('path');
+
+// Common configuration settings
+const commonConfig = {
+  entry: './src/index.js',
+  mode:'production',
+  entry: './includes.js',
+  module: {
         rules: [
             {
                 test: /\.js$/,
@@ -20,3 +20,26 @@ module.exports = {
         ]
     }
 };
+
+// Bundle with third-party dependencies
+const withDependenciesConfig = {
+  ...commonConfig,
+  output: {
+    filename: 'dren-frontend.with-deps.js',
+    path: path.resolve(__dirname, 'dist')
+  }
+};
+
+// Bundle without third-party dependencies
+const withoutDependenciesConfig = {
+  ...commonConfig,
+  output: {
+    filename: 'dren-frontend.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  externals: {
+    'inputmask': 'InputMask'
+  }
+};
+
+module.exports = [withDependenciesConfig, withoutDependenciesConfig];
