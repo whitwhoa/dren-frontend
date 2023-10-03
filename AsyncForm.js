@@ -22,6 +22,7 @@ class AsyncForm
             successMessage:"Success!",
             processingMessage:"Processing...",
             unnamedElementValidationCallback:null, // (key, responseJson.errors)
+            resetOnSuccess:false,
             ...options
         };
 
@@ -160,7 +161,8 @@ class AsyncForm
                 else if(this.options.onResponse.includes('flash'))
                 {
                     this.alertMessage.show(this.options.successMessage, 'success', parseInt(this.getValueInBrackets(this.options.onResponse)));
-                    this.form.reset();
+                    if(this.options.resetOnSuccess)
+                        this.form.reset();
                 }
                 else if(this.options.onResponse.includes('confirm-redirect'))
                 {
@@ -174,7 +176,8 @@ class AsyncForm
                 else if(this.options.onResponse.includes('confirm'))
                 {
                     this.alertMessage.show(this.options.successMessage, 'success', () => {
-                        this.form.reset();
+                        if(this.options.resetOnSuccess)
+                            this.form.reset();
                     });
                 }
                 else if(this.options.onResponse.includes('redirect'))
