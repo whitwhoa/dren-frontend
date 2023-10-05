@@ -4,7 +4,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 
 class AsyncForm
 {
-    constructor(formId, options = {}) // happens once
+    constructor(formId, options = {})
     {
         this.processingTransaction = false;
         this.loadingOverlay = document.querySelector('loading-overlay'); // LoadingOverlay
@@ -23,6 +23,7 @@ class AsyncForm
             processingMessage:"Processing...",
             unnamedElementValidationCallback:null, // (key, responseJson.errors)
             resetOnSuccess:false,
+            validationOverrides:{},
             ...options
         };
 
@@ -208,6 +209,15 @@ class AsyncForm
                 // clear previous errors
                 this.resetValidationMessages();
 
+                // loop over each validation override and execute its callback function
+                Object.keys(responseJson.errors).forEach((key) => {
+                    if(this.options.validationOverrides.hasOwnProperty(key))
+                    {
+                        let callback = this.options.validationOverrides[key];
+                        callback(key, responseJson.errors[key][0], this.form);
+                    }
+                });
+
                 // if we are to display errors in one big alert container, do that and return, otherwise continue
                 // onward to displaying error messages underneath each input element and adding required classes to
                 // individual form components
@@ -221,7 +231,8 @@ class AsyncForm
 
                         let errorList = '<ul>';
                         Object.keys(responseJson.errors).forEach((key) => {
-                            errorList += `<li>${responseJson.errors[key][0]}</li>`;
+                            if(!this.options.validationOverrides.hasOwnProperty(key))
+                                errorList += `<li>${responseJson.errors[key][0]}</li>`;
                         });
                         errorList += '</ul>';
 
@@ -248,7 +259,7 @@ class AsyncForm
                 // add invalid classes to all elements which require them
                 Object.keys(responseJson.errors).forEach((key) => {
 
-                    if(this.namedElements.includes(key))
+                    if(this.namedElements.includes(key) && !this.options.validationOverrides.hasOwnProperty(key))
                     {
                         let element = this.form.querySelector('input[name="' + key + '"]') ||
                             this.form.querySelector('select[name="' + key + '"]') ||
