@@ -81,15 +81,21 @@ class AsyncForm
 
     resetValidationMessages()
     {
+        let groupedValidationDiv = document.getElementById('groupedValidationDiv');
+
         if(this.options.validationErrorsDisplayType === 'grouped')
         {
-            let groupedValidationDiv = document.getElementById('groupedValidationDiv');
             if(groupedValidationDiv)
                 groupedValidationDiv.remove();
 
             return;
         }
 
+        // remove the alert message for any hidden field validation errors if present
+        if(groupedValidationDiv)
+            groupedValidationDiv.remove();
+
+        // remove all elements with invalid-feedback class
         this.form.querySelectorAll('.invalid-feedback').forEach(e => e.parentNode.removeChild(e));
 
         // get all input elements within form
@@ -256,7 +262,9 @@ class AsyncForm
                 // names that are returned can be used just like names that are not arrays and then referenced correctly
                 // in the below code to auto set error styles/messages...woot
 
-                // add invalid classes to all elements which require them
+                // add invalid classes to all elements which require them. If an element is of type hidden, build an
+                // alert-danger div above the form and display those errors there
+                let hiddenElementValidationErrors = [];
                 Object.keys(responseJson.errors).forEach((key) => {
 
                     if(this.namedElements.includes(key) && !this.options.validationOverrides.hasOwnProperty(key))
@@ -265,16 +273,43 @@ class AsyncForm
                             this.form.querySelector('select[name="' + key + '"]') ||
                             this.form.querySelector('textarea[name="' + key + '"]');
 
+                        if(element && element.tagName === 'INPUT' && element.type === 'hidden')
+                        {
+                            hiddenElementValidationErrors.push(responseJson.errors[key][0]);
+                            return;
+                        }
+
                         element.classList.add('is-invalid');
 
                         element.insertAdjacentHTML('afterend','<span class="invalid-feedback" role="alert"><strong>' +
                             responseJson.errors[key][0] + '</strong></span>');
                     }
 
-                    // if set, run unnamedElementValidationCallback
+                    // if set, run unnamedElementValidationCallback. Used if for example the validation rules return
+                    // a key value that's not associated with a form element name value
                     if(this.options.unnamedElementValidationCallback !== null)
                         this.options.unnamedElementValidationCallback(key, responseJson.errors);
                 });
+
+                if(hiddenElementValidationErrors.length > 0)
+                {
+                    let groupedValidationDiv = document.createElement('div');
+                    groupedValidationDiv.id = 'groupedValidationDiv';
+                    groupedValidationDiv.classList.add('alert');
+                    groupedValidationDiv.classList.add('alert-danger');
+                    groupedValidationDiv.innerHTML = (() => {
+
+                        let errorList = '<ul>';
+                        hiddenElementValidationErrors.forEach((v,k)=>{
+                            errorList += `<li>${v}</li>`;
+                        })
+                        errorList += '</ul>';
+
+                        return errorList;
+                    })();
+
+                    this.form.parentNode.insertBefore(groupedValidationDiv, this.form);
+                }
 
             }
         }

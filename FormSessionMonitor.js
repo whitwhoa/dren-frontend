@@ -12,10 +12,8 @@ class FormSessionMonitor
         this.isAuthenticated = null;
         this.hasRid = null;
         this.sessionExpirationTime = null;
-        this.csrfUpdateAttempted = false;
 
         this.getSessionMetaData();
-
     }
 
     async getSessionMetaData()
@@ -107,52 +105,38 @@ class FormSessionMonitor
 
     updateCsrf(formElementName, formObj)
     {
-        //alert(formElementName);
+        fetch("/get-csrf", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Network response was not ok");
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
 
-        if(this.csrfUpdateAttempted)
-        {
-            // should never need to make call to revalidate csrf more than once. If so, something bad has happened, so display an error message
-            // and stop making api calls
-            document.querySelector('alert-message').show('An unexpected error has occurred while processing your request22', 'danger', () => {});
-        }
-        else
-        {
-            fetch("/get-csrf", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
-            })
-            .then(response => {
-                if(!response.ok){
-                    throw new Error("Network response was not ok");
-                } else {
-                    return response.json();
-                }
-            })
-            .then(data => {
+            let csrfElement = document.querySelector('input[name="' + formElementName + '"]');
+            csrfElement.value = data.csrf;
+            this.csrfUpdateAttempted = true;
 
-                let csrfElement = document.querySelector('input[name="' + formElementName + '"]');
-                csrfElement.value = data.csrf;
-                this.csrfUpdateAttempted = true;
-
-                let event = new Event("submit", {
-                    'bubbles'    : true,
-                    'cancelable' : true
-                });
-
-                formObj.dispatchEvent(event);
-
-            })
-            .catch(error => {
-                document.querySelector('alert-message').show('An unexpected error has occurred while processing your request33', 'danger', () => {});
-                console.error('There was a problem with the fetch operation:', error.message);
+            let event = new Event("submit", {
+                'bubbles'    : true,
+                'cancelable' : true
             });
-        }
 
+            formObj.dispatchEvent(event);
 
-
+        })
+        .catch(error => {
+            document.querySelector('alert-message').show('An unexpected error has occurred while processing your request33', 'danger', () => {});
+            console.error('There was a problem with the fetch operation:', error.message);
+        });
     }
 
 
