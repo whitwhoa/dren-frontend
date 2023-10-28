@@ -4,6 +4,7 @@ import LoadingOverlay from './LoadingOverlay.js';
 import AsyncForm from './AsyncForm';
 import FormSessionMonitor from "./FormSessionMonitor";
 import LocationSearch from "./LocationSearch";
+import Helpers from "./Helpers";
 
 
 window.customElements.define('debug-screen-size', DebugScreenSize);
@@ -12,3 +13,4 @@ window.customElements.define('alert-message', AlertMessage);
 window.customElements.define('location-search', LocationSearch);
 window.AsyncForm = AsyncForm;
 window.FormSessionMonitor = FormSessionMonitor;
+window.Helpers = Helpers;
