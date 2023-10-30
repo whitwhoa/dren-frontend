@@ -40,9 +40,15 @@ class AlertMessage extends HTMLElement {
                 color: #721c24;
                 border: 1px solid #721c24;
             }
+            .info {
+                background-color: #CFE2FF;
+                color: #052C65;
+                border: 1px solid #052C65;
+            }
             .alert-message-success-icon,
             .alert-message-warning-icon,
-            .alert-message-danger-icon {
+            .alert-message-danger-icon,
+            .alert-message-info-icon{
                 width: 40px;
                 margin-bottom: 10px;
             }
@@ -54,6 +60,9 @@ class AlertMessage extends HTMLElement {
             }
             .alert-message-danger-icon {
                 color: #721c24;
+            }
+            .alert-message-info-icon {
+                color: #052C65;
             }
             #confirmButton {
                 margin-top: 10px;
@@ -77,6 +86,11 @@ class AlertMessage extends HTMLElement {
             .danger #confirmButton {
                 background-color: #721c24;
             }
+            
+            .info #confirmButton {
+                background-color: #052C65;
+            }            
+            
             @media (min-width: 576px) { 
                 /* sm */
                 
@@ -152,6 +166,9 @@ class AlertMessage extends HTMLElement {
                 break;
             case 'danger':
                 innerPath.setAttribute('d', 'M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z');
+                break;
+            case 'info':
+                innerPath.setAttribute('d', 'M8,2 C6.34314,2 5,3.34314 5,5 C5,5.55228 5.44772,6 6,6 C6.55228,6 7,5.55228 7,5 C7,4.44771 7.44772,4 8,4 C8.55228,4 9,4.44771 9,5 C9,5.89443 8.55229,6.44772 7.70711,7.29289 L7,8 C7,8.55228 7.44772,9 8,9 C8.55228,9 9,8.55228 9,8 L9,8.29289 C10.6569,6.63604 12,5.34315 12,5 C12,3.34314 10.6569,2 9,2 L8,2 Z M8,10 C7.44772,10 7,10.4477 7,11 C7,11.5523 7.44772,12 8,12 C8.55228,12 9,11.5523 9,11 C9,10.4477 8.55228,10 8,10 L8,10 Z');
                 break;
         }
 
