@@ -64,32 +64,39 @@ class AlertMessage extends HTMLElement {
             .alert-message-info-icon {
                 color: #052C65;
             }
-            #confirmButton {
+            #confirmButton, #cancelButton {
                 margin-top: 10px;
                 display: none;
-                padding: 10px 15px;
+                padding: 10px 30px;
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
                 color: white;
-                min-width: 25%;
+                /*min-width: 25%;*/
             }
 
-            .success #confirmButton {
+
+            .success #confirmButton, .success #cancelButton {
                 background-color: #155724;
             }
 
-            .warning #confirmButton {
+            .warning #confirmButton, .warning #cancelButton {
                 background-color: #856404;
             }
 
-            .danger #confirmButton {
+            .danger #confirmButton, .danger #cancelButton {
                 background-color: #721c24;
             }
             
-            .info #confirmButton {
+            .info #confirmButton, .info  #cancelButton {
                 background-color: #052C65;
-            }            
+            }      
+            
+            .button-container {
+                display: flex;
+                justify-content: center; /* This will center the buttons horizontally */
+                gap: 10px; /* This creates space between your buttons */
+            }      
             
             @media (min-width: 576px) { 
                 /* sm */
@@ -130,7 +137,10 @@ class AlertMessage extends HTMLElement {
                 <path class="innerPath"/>
             </svg>
             <div id="messageText"></div>
-            <button id="confirmButton">Ok</button>
+            <div class="button-container">
+                <button id="confirmButton">Ok</button>
+                <button id="cancelButton">Cancel</button>
+            </div>
         </div>
         `;
 
@@ -142,14 +152,24 @@ class AlertMessage extends HTMLElement {
                 this.hide();
             }
         });
+
+        this.cancelButton = this.shadowRoot.querySelector('#cancelButton');
+        this.cancelButton.addEventListener('click', () => {
+            this.hide();
+        });
     }
 
-    show(message, messageType, action = null) {
+    show(message, messageType, action = null, cancelButton = false) {
         let icon = this.shadowRoot.querySelector('#icon');
         let messageText = this.shadowRoot.querySelector('#messageText');
         let messageBox = this.shadowRoot.querySelector('#messageBox');
         let outerPath = this.shadowRoot.querySelector('.outerPath');
         let innerPath = this.shadowRoot.querySelector('.innerPath');
+
+        if(cancelButton)
+            this.cancelButton.style.display = 'block';
+        else
+            this.cancelButton.style.display = 'none';
 
         messageText.textContent = message;
         messageBox.className = "message-box " + messageType;
