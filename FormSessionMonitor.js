@@ -121,9 +121,9 @@ class FormSessionMonitor
         })
         .then(data => {
 
-            let csrfElement = document.querySelector('input[name="' + formElementName + '"]');
+            //let csrfElement = document.querySelector('input[name="' + formElementName + '"]');
+            let csrfElement = formObj.querySelector('input[name="' + formElementName + '"]');
             csrfElement.value = data.csrf;
-            this.csrfUpdateAttempted = true;
 
             let event = new Event("submit", {
                 'bubbles'    : true,
@@ -134,11 +134,47 @@ class FormSessionMonitor
 
         })
         .catch(error => {
-            document.querySelector('alert-message').show('An unexpected error has occurred while processing your request33', 'danger', () => {});
+            document.querySelector('alert-message').show('An unexpected error has occurred while processing your request', 'danger', () => {});
             console.error('There was a problem with the fetch operation:', error.message);
         });
     }
 
+    updateCsrfNoSubmit(formElementName)
+    {
+        return new Promise((resolve, reject) => {
+
+            fetch("/get-csrf", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }
+            })
+            .then(response => {
+                if(!response.ok){
+                    throw new Error("Network response was not ok");
+                } else {
+                    return response.json();
+                }
+            })
+            .then(data => {
+
+                console.log('updating csrf token');
+
+                let csrfElement = document.querySelector('input[name="' + formElementName + '"]');
+                csrfElement.value = data.csrf;
+
+                resolve();
+
+            })
+            .catch(error => {
+                document.querySelector('alert-message').show('An unexpected error has occurred while processing your request', 'danger', () => {});
+                console.error('There was a problem with the fetch operation:', error.message);
+                reject();
+            });
+
+        });
+    }
 
 
 }

@@ -194,6 +194,8 @@ class AsyncForm
 
                     window.location.href = this.replaceVarsInUrl(this.options.redirectUrl, responseJson);
                 }
+
+                this.processingTransaction = false;
             }
             else // http error, something other than 2xx
             {
