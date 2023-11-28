@@ -160,7 +160,7 @@ class AsyncForm
                 this.loadingOverlay.hide();
 
                 if(this.options.genericOnSuccessCallback !== null)
-                    this.options.genericOnSuccessCallback();
+                    this.options.genericOnSuccessCallback(responseJson);
 
                 if(this.options.onResponse.includes('flash-redirect'))
                 {
@@ -214,10 +214,10 @@ class AsyncForm
                 this.processingTransaction = false;
                 this.loadingOverlay.hide();
 
-                if(this.options.genericOnErrorCallback !== null)
-                    this.options.genericOnErrorCallback();
-
                 let responseJson = await response.json();
+
+                if(this.options.genericOnErrorCallback !== null)
+                    this.options.genericOnErrorCallback(responseJson);
 
                 if(response.status !== 422 || (response.status === 422 && !responseJson.hasOwnProperty('errors')))
                 {
@@ -246,6 +246,7 @@ class AsyncForm
                 // individual form components
                 if(this.options.validationErrorsDisplayType === "grouped")
                 {
+                    let validErrors = 0;
                     let groupedValidationDiv = document.createElement('div');
                     groupedValidationDiv.id = 'groupedValidationDiv';
                     groupedValidationDiv.classList.add('alert');
@@ -255,14 +256,19 @@ class AsyncForm
                         let errorList = '<ul>';
                         Object.keys(responseJson.errors).forEach((key) => {
                             if(!this.options.validationOverrides.hasOwnProperty(key))
+                            {
+                                validErrors += 1;
                                 errorList += `<li>${responseJson.errors[key][0]}</li>`;
+                            }
+
                         });
                         errorList += '</ul>';
 
                         return errorList;
                     })();
 
-                    this.form.parentNode.insertBefore(groupedValidationDiv, this.form);
+                    if(validErrors > 0)
+                        this.form.parentNode.insertBefore(groupedValidationDiv, this.form);
 
                     return;
                 }
