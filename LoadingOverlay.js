@@ -1,6 +1,7 @@
 class LoadingOverlay extends HTMLElement {
     constructor() {
         super();
+        this.shown = false;
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
         <style>
@@ -51,14 +52,17 @@ class LoadingOverlay extends HTMLElement {
             <div class="loaderText"></div>
         </div>
         `;
+
     }
 
     show(val = 'Processing...') {
+        this.shown = true;
         this.shadowRoot.querySelector('.loaderText').textContent = val;
         this.style.display = 'flex';
     }
 
     hide() {
+        this.shown = false;
         this.shadowRoot.querySelector('.loaderText').textContent = '';
         this.style.display = 'none';
     }

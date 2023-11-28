@@ -24,6 +24,8 @@ class AsyncForm
             unnamedElementValidationCallback:null, // (key, responseJson.errors)
             resetOnSuccess:false,
             validationOverrides:{},
+            genericOnErrorCallback:null,
+            genericOnSuccessCallback:null,
             ...options
         };
 
@@ -57,10 +59,17 @@ class AsyncForm
 
             this.processingTransaction = true;
 
-            if(this.options.processingMessage === null)
-                this.loadingOverlay.show();
-            else
-                this.loadingOverlay.show(this.options.processingMessage);
+            if(!this.loadingOverlay.shown)
+            {
+                if(this.options.processingMessage === null)
+                {
+                    this.loadingOverlay.show();
+                }
+                else
+                {
+                    this.loadingOverlay.show(this.options.processingMessage);
+                }
+            }
 
             let fd = new FormData(this.form);
             let fdp = new FormData();
@@ -150,6 +159,9 @@ class AsyncForm
 
                 this.loadingOverlay.hide();
 
+                if(this.options.genericOnSuccessCallback !== null)
+                    this.options.genericOnSuccessCallback();
+
                 if(this.options.onResponse.includes('flash-redirect'))
                 {
                     this.alertMessage.show(this.options.successMessage, 'success');
@@ -201,6 +213,9 @@ class AsyncForm
             {
                 this.processingTransaction = false;
                 this.loadingOverlay.hide();
+
+                if(this.options.genericOnErrorCallback !== null)
+                    this.options.genericOnErrorCallback();
 
                 let responseJson = await response.json();
 
