@@ -26,6 +26,7 @@ class AsyncForm
             validationOverrides:{},
             genericOnErrorCallback:null,
             genericOnSuccessCallback:null,
+            showLoadingOverlay:true,
             ...options
         };
 
@@ -59,16 +60,13 @@ class AsyncForm
 
             this.processingTransaction = true;
 
-            if(!this.loadingOverlay.shown)
+
+            if(this.options.showLoadingOverlay && !this.loadingOverlay.shown)
             {
                 if(this.options.processingMessage === null)
-                {
                     this.loadingOverlay.show();
-                }
                 else
-                {
                     this.loadingOverlay.show(this.options.processingMessage);
-                }
             }
 
             let fd = new FormData(this.form);
@@ -157,7 +155,8 @@ class AsyncForm
 
                 let responseJson = await response.json();
 
-                this.loadingOverlay.hide();
+                if(this.options.showLoadingOverlay)
+                    this.loadingOverlay.hide();
 
                 if(this.options.genericOnSuccessCallback !== null)
                     this.options.genericOnSuccessCallback(responseJson);
@@ -212,7 +211,9 @@ class AsyncForm
             else // http error, something other than 2xx
             {
                 this.processingTransaction = false;
-                this.loadingOverlay.hide();
+
+                if(this.options.showLoadingOverlay)
+                    this.loadingOverlay.hide();
 
                 let responseJson = await response.json();
 
@@ -339,7 +340,9 @@ class AsyncForm
         catch (error) // bad error
         {
             this.processingTransaction = false;
-            this.loadingOverlay.hide();
+
+            if(this.options.showLoadingOverlay)
+                this.loadingOverlay.hide();
 
             console.error('Fetch error', error);
             this.alertMessage.show('An unexpected error has occurred while processing your request', 'danger', () => {});
