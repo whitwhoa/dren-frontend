@@ -45,6 +45,11 @@ class AlertMessage extends HTMLElement {
                 color: #052C65;
                 border: 1px solid #052C65;
             }
+            .default {
+                background-color: #FFFFFF;
+                color: #4D5969;
+                border: 1px solid #4D5969;
+            }
             .alert-message-success-icon,
             .alert-message-warning-icon,
             .alert-message-danger-icon,
@@ -90,7 +95,11 @@ class AlertMessage extends HTMLElement {
             
             .info #confirmButton, .info  #cancelButton {
                 background-color: #052C65;
-            }      
+            }
+            
+            .default #confirmButton, .default  #cancelButton {
+                background-color: #052C65;
+            }
             
             .button-container {
                 display: flex;
@@ -175,22 +184,31 @@ class AlertMessage extends HTMLElement {
         messageText.innerHTML = message;
         messageBox.className = "message-box " + messageType;
 
-        outerPath.setAttribute('d', 'M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z');
-        icon.setAttribute('class', `alert-message-${messageType}-icon`);
+        if(messageType === 'default')
+        {
+            icon.style.display = "none";
+        }
+        else
+        {
+            icon.style.display = "block";
 
-        switch(messageType) {
-            case 'success':
-                innerPath.setAttribute('d', 'M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z');
-                break;
-            case 'warning':
-                innerPath.setAttribute('d', 'M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z');
-                break;
-            case 'danger':
-                innerPath.setAttribute('d', 'M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z');
-                break;
-            case 'info':
-                innerPath.setAttribute('d', 'M8,2 C6.34314,2 5,3.34314 5,5 C5,5.55228 5.44772,6 6,6 C6.55228,6 7,5.55228 7,5 C7,4.44771 7.44772,4 8,4 C8.55228,4 9,4.44771 9,5 C9,5.89443 8.55229,6.44772 7.70711,7.29289 L7,8 C7,8.55228 7.44772,9 8,9 C8.55228,9 9,8.55228 9,8 L9,8.29289 C10.6569,6.63604 12,5.34315 12,5 C12,3.34314 10.6569,2 9,2 L8,2 Z M8,10 C7.44772,10 7,10.4477 7,11 C7,11.5523 7.44772,12 8,12 C8.55228,12 9,11.5523 9,11 C9,10.4477 8.55228,10 8,10 L8,10 Z');
-                break;
+            outerPath.setAttribute('d', 'M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z');
+            icon.setAttribute('class', `alert-message-${messageType}-icon`);
+
+            switch(messageType) {
+                case 'success':
+                    innerPath.setAttribute('d', 'M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z');
+                    break;
+                case 'warning':
+                    innerPath.setAttribute('d', 'M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z');
+                    break;
+                case 'danger':
+                    innerPath.setAttribute('d', 'M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z');
+                    break;
+                case 'info':
+                    innerPath.setAttribute('d', 'M8,2 C6.34314,2 5,3.34314 5,5 C5,5.55228 5.44772,6 6,6 C6.55228,6 7,5.55228 7,5 C7,4.44771 7.44772,4 8,4 C8.55228,4 9,4.44771 9,5 C9,5.89443 8.55229,6.44772 7.70711,7.29289 L7,8 C7,8.55228 7.44772,9 8,9 C8.55228,9 9,8.55228 9,8 L9,8.29289 C10.6569,6.63604 12,5.34315 12,5 C12,3.34314 10.6569,2 9,2 L8,2 Z M8,10 C7.44772,10 7,10.4477 7,11 C7,11.5523 7.44772,12 8,12 C8.55228,12 9,11.5523 9,11 C9,10.4477 8.55228,10 8,10 L8,10 Z');
+                    break;
+            }
         }
 
         this.style.display = 'flex';
