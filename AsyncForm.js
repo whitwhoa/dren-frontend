@@ -220,9 +220,15 @@ class AsyncForm
                 if(this.options.genericOnErrorCallback !== null)
                     this.options.genericOnErrorCallback(responseJson);
 
-                if(response.status !== 422 || (response.status === 422 && !responseJson.hasOwnProperty('errors')))
+                if(response.status !== 422)
                 {
                     this.alertMessage.show('An unexpected error has occurred while processing your request', 'danger', () => {});
+                    return;
+                }
+
+                if(response.status === 422 && !responseJson.hasOwnProperty('errors') && responseJson.hasOwnProperty('message'))
+                {
+                    this.alertMessage.show(responseJson.message, 'danger', () => {});
                     return;
                 }
 
