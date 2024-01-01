@@ -111,6 +111,7 @@ class LocationSearch extends HTMLElement
         this.adDropdown = this.shadowRoot.querySelector("#adDropdown");
         this.searchUrl = this.getAttribute('searchUrl');
         this.submitUrl = this.getAttribute('submitUrl');
+        this.fetchRate = this.getAttribute('fetchRate');
         this.verifyInputUrl = this.getAttribute('verifyInputUrl');
         this.submitButton = this.shadowRoot.querySelector("#submitButton");
         this.submitOnSelection = this.getAttribute('submitOnSelection') === "true";
@@ -132,14 +133,18 @@ class LocationSearch extends HTMLElement
 
         };
 
+        this.stringToFetch = null;
+
         this.responseExceptionHandler = (error) => {console.log(error.message)};
 
         this.adInput.addEventListener('input', (e) => {
-            this.fetchResults(e.target.value);
+            //this.fetchResults(e.target.value);
+            this.stringToFetch = e.target.value;
         });
 
         this.adInput.addEventListener('focus', (e) => {
-            this.fetchResults(e.target.value);
+            //this.fetchResults(e.target.value);
+            this.stringToFetch = e.target.value;
         });
 
         this.adInput.addEventListener('blur', (e) => {
@@ -182,6 +187,17 @@ class LocationSearch extends HTMLElement
             this.doSubmission(this.adInput.value);
 
         });
+
+        setInterval(()=>{
+
+            if(this.stringToFetch !== null)
+            {
+                let sendVal = this.stringToFetch;
+                this.stringToFetch = null;
+                this.fetchResults(sendVal);
+            }
+
+        }, parseInt(this.fetchRate));
 
     }
 
