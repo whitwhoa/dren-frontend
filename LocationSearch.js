@@ -8,12 +8,12 @@ class LocationSearch extends HTMLElement
         this.attachShadow({mode: 'open'});
         this.shadowRoot.innerHTML = `
                     <style>
-                        #adContainer {
+                        #autoDropdownContainer {
                             position: relative;
                             width: 100%;
                         }
 
-                        #adInput {
+                        #autoDropdownInput {
                             width: 100%;
                             box-sizing: border-box;
                             border-radius:30px;
@@ -27,7 +27,7 @@ class LocationSearch extends HTMLElement
                             text-overflow:ellipsis;
                         }
 
-                        #adDropdown {
+                        #autoDropdown {
                             display: none;
                             position: absolute;
                             left:0;
@@ -46,7 +46,7 @@ class LocationSearch extends HTMLElement
                             overflow:hidden;
                         }
 
-                        #adDropdown a {
+                        #autoDropdown a {
                             color: black;
                             padding: 10px;
                             text-decoration: none;
@@ -54,7 +54,7 @@ class LocationSearch extends HTMLElement
                             align-items: center;
                         }
 
-                        #adDropdown a:hover {
+                        #autoDropdown a:hover {
                             background-color: #ddd;
                         }
 
@@ -92,23 +92,23 @@ class LocationSearch extends HTMLElement
                         }
 
                     </style>
-                    <div id="adContainer">
-                        <input type="text" id="adInput">
+                    <div id="autoDropdownContainer">
+                        <input type="text" id="autoDropdownInput">
                         <button id="submitButton">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.5 18C14.0899 18 17 15.0899 17 11.5C17 7.91015 14.0899 5 10.5 5C6.91015 5 4 7.91015 4 11.5C4 15.0899 6.91015 18 10.5 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M20 20L16 16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </button>
-                        <div id="adDropdown">
+                        <div id="autoDropdown">
 
                         </div>
                     </div>
                 `;
 
-        this.adInput = this.shadowRoot.querySelector("#adInput");
-        this.adInput.setAttribute('placeholder', this.getAttribute('placeholder'));
-        this.adDropdown = this.shadowRoot.querySelector("#adDropdown");
+        this.autoDropdownInput = this.shadowRoot.querySelector("#autoDropdownInput");
+        this.autoDropdownInput.setAttribute('placeholder', this.getAttribute('placeholder'));
+        this.autoDropdown = this.shadowRoot.querySelector("#autoDropdown");
         this.searchUrl = this.getAttribute('searchUrl');
         this.submitUrl = this.getAttribute('submitUrl');
         this.fetchRate = this.getAttribute('fetchRate');
@@ -137,17 +137,17 @@ class LocationSearch extends HTMLElement
 
         this.responseExceptionHandler = (error) => {console.log(error.message)};
 
-        this.adInput.addEventListener('input', (e) => {
+        this.autoDropdownInput.addEventListener('input', (e) => {
             //this.fetchResults(e.target.value);
             this.stringToFetch = e.target.value;
         });
 
-        this.adInput.addEventListener('focus', (e) => {
+        this.autoDropdownInput.addEventListener('focus', (e) => {
             //this.fetchResults(e.target.value);
             this.stringToFetch = e.target.value;
         });
 
-        this.adInput.addEventListener('blur', (e) => {
+        this.autoDropdownInput.addEventListener('blur', (e) => {
 
             // push this to the end of the event queue so active element gets updated before it is executed
             setTimeout(()=>{
@@ -157,7 +157,7 @@ class LocationSearch extends HTMLElement
 
         });
 
-        this.adInput.addEventListener('keydown', (e) => {
+        this.autoDropdownInput.addEventListener('keydown', (e) => {
             switch (e.keyCode) {
                 case 38: // Up arrow
                     e.preventDefault(); // prevent default behavior (like moving cursor in input)
@@ -174,8 +174,8 @@ class LocationSearch extends HTMLElement
         });
 
         // clear any highlighting that may be present from arrow key selection when mouse is moved into dropdown
-        this.adDropdown.addEventListener('mouseover', () => {
-            const options = this.adDropdown.querySelectorAll('a');
+        this.autoDropdown.addEventListener('mouseover', () => {
+            const options = this.autoDropdown.querySelectorAll('a');
             if (this.currentHighlightIndex !== -1 && options[this.currentHighlightIndex])
                 options[this.currentHighlightIndex].style.backgroundColor = "";
             this.currentHighlightIndex = -1;
@@ -184,7 +184,7 @@ class LocationSearch extends HTMLElement
 
         this.submitButton.addEventListener('click', (e) => {
 
-            this.doSubmission(this.adInput.value);
+            this.doSubmission(this.autoDropdownInput.value);
 
         });
 
@@ -237,7 +237,7 @@ class LocationSearch extends HTMLElement
 
     navigateDropdown(direction)
     {
-        const options = this.adDropdown.querySelectorAll('a');
+        const options = this.autoDropdown.querySelectorAll('a');
         if (options.length === 0) return;
 
         // Un-highlight the currently highlighted option if there's one
@@ -257,9 +257,9 @@ class LocationSearch extends HTMLElement
 
     selectHighlighted()
     {
-        const options = this.adDropdown.querySelectorAll('a');
+        const options = this.autoDropdown.querySelectorAll('a');
 
-        if(this.currentHighlightIndex === -1 && this.adInput.value !== "")
+        if(this.currentHighlightIndex === -1 && this.autoDropdownInput.value !== "")
             this.submitButton.click();
 
         if (this.currentHighlightIndex !== -1 && options[this.currentHighlightIndex]) {
@@ -269,8 +269,8 @@ class LocationSearch extends HTMLElement
 
     hideDropdown()
     {
-        this.adDropdown.innerHTML = '';
-        this.adDropdown.style.display = "none";
+        this.autoDropdown.innerHTML = '';
+        this.autoDropdown.style.display = "none";
         this.currentHighlightIndex = -1;
     }
 
@@ -317,7 +317,7 @@ class LocationSearch extends HTMLElement
         }
 
         this.currentHighlightIndex = -1;
-        this.adDropdown.innerHTML = '';
+        this.autoDropdown.innerHTML = '';
 
         for(let result in results)
         {
@@ -332,16 +332,16 @@ class LocationSearch extends HTMLElement
 
             link.onclick = (e) => {
                 e.preventDefault();
-                this.adInput.value = results[result];
+                this.autoDropdownInput.value = results[result];
                 this.hideDropdown();
 
                 if(this.submitOnSelection)
-                    this.doSubmission(this.adInput.value);
+                    this.doSubmission(this.autoDropdownInput.value);
             };
-            this.adDropdown.appendChild(link);
+            this.autoDropdown.appendChild(link);
         }
 
-        this.adDropdown.style.display = "block";
+        this.autoDropdown.style.display = "block";
     }
 
 }
